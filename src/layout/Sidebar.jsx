@@ -1,5 +1,4 @@
 import { NavLink } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
 import {
   FiCheckSquare, FiShoppingBag, FiActivity, FiBarChart2, FiFileText, FiSettings, FiX,
 } from 'react-icons/fi';
@@ -69,40 +68,35 @@ export default function Sidebar({ open, onClose }) {
         <Footer />
       </aside>
 
-      {/* Slide-in drawer — mobile / tablet */}
-      <AnimatePresence>
-        {open && (
-          <div className="lg:hidden fixed inset-0 z-50 flex">
-            <motion.div
-              className="absolute inset-0 bg-black/30"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.15 }}
-              onClick={onClose}
-            />
-            <motion.aside
-              className="relative w-64 max-w-[82%] h-full bg-white border-r border-line flex flex-col shadow-pop"
-              initial={{ x: '-100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '-100%' }}
-              transition={{ type: 'tween', duration: 0.2, ease: 'easeOut' }}
-            >
-              <div className="h-14 flex items-center justify-between px-4 border-b border-line shrink-0">
-                <div className="flex items-center gap-2">
-                  <Brand />
-                  <span className="text-sm font-semibold text-ink">Mini Ascension</span>
-                </div>
-                <button className="btn btn-ghost btn-icon" onClick={onClose} aria-label="Close menu">
-                  <FiX className="text-[16px]" />
-                </button>
-              </div>
-              <NavItems onNavigate={onClose} />
-              <Footer />
-            </motion.aside>
+      {/* Slide-in drawer — mobile / tablet (CSS transitions, robust everywhere) */}
+      <div
+        className={`lg:hidden fixed inset-0 z-50 ${open ? '' : 'pointer-events-none'}`}
+        aria-hidden={!open}
+      >
+        <div
+          className={`absolute inset-0 bg-black/30 transition-opacity duration-200 ${
+            open ? 'opacity-100' : 'opacity-0'
+          }`}
+          onClick={onClose}
+        />
+        <aside
+          className={`absolute inset-y-0 left-0 w-64 max-w-[82%] bg-white border-r border-line flex flex-col shadow-pop transition-transform duration-200 ease-out ${
+            open ? 'translate-x-0' : '-translate-x-full'
+          }`}
+        >
+          <div className="h-14 flex items-center justify-between px-4 border-b border-line shrink-0">
+            <div className="flex items-center gap-2">
+              <Brand />
+              <span className="text-sm font-semibold text-ink">Mini Ascension</span>
+            </div>
+            <button className="btn btn-ghost btn-icon" onClick={onClose} aria-label="Close menu">
+              <FiX className="text-[16px]" />
+            </button>
           </div>
-        )}
-      </AnimatePresence>
+          <NavItems onNavigate={onClose} />
+          <Footer />
+        </aside>
+      </div>
     </>
   );
 }

@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-surface text-ink font-sans text-sm;
+  }
+  /* Tabular numerals for all numeric data columns. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum';
+  }
+}
+
+@layer components {
+  /* --- Buttons --- */
+  .btn {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-md border text-sm font-medium
+           px-3 h-8 transition-colors select-none disabled:opacity-50 disabled:pointer-events-none;
+  }
+  .btn-primary {
+    @apply bg-accent border-accent text-white hover:bg-accent-hover hover:border-accent-hover;
+  }
+  .btn-secondary {
+    @apply bg-white border-line text-ink hover:bg-surface-subtle;
+  }
+  .btn-ghost {
+    @apply border-transparent text-ink-muted hover:bg-surface-subtle hover:text-ink;
+  }
+  .btn-danger {
+    @apply bg-white border-line text-danger hover:bg-red-50 hover:border-red-200;
+  }
+  .btn-sm { @apply h-7 px-2 text-xs; }
+  .btn-icon { @apply h-8 w-8 px-0; }
+
+  /* --- Inputs --- */
+  .input {
+    @apply w-full h-8 rounded-md border border-line bg-white px-2.5 text-sm text-ink
+           placeholder:text-ink-faint outline-none transition
+           focus:border-accent focus:ring-2 focus:ring-accent/20;
+  }
+  .label { @apply block text-xs font-medium text-ink-muted mb-1; }
+
+  /* --- Data table --- */
+  .data-table { @apply w-full border-collapse text-sm; }
+  .data-table th {
+    @apply bg-surface-raised text-left text-xs font-semibold text-ink-muted
+           px-3 py-2 border-b border-line whitespace-nowrap;
+  }
+  .data-table td {
+    @apply px-3 py-1.5 border-b border-line text-ink align-middle;
+  }
+  .data-table tbody tr:hover { @apply bg-surface-subtle; }
+
+  /* --- Cards / panels --- */
+  .panel {
+    @apply bg-white border border-line rounded-md shadow-card;
+  }
+
+  /* --- Badges --- */
+  .badge {
+    @apply inline-flex items-center gap-1 rounded px-1.5 h-5 text-2xs font-medium;
+  }
+
+  /* Chip for category tags */
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded px-1.5 py-0.5 text-2xs font-medium
+           border border-line text-ink-muted bg-white;
+  }
+}
+
+/* Thin, unobtrusive scrollbars for dense tables. */
+.scroll-thin::-webkit-scrollbar { height: 10px; width: 10px; }
+.scroll-thin::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 6px; }
+.scroll-thin::-webkit-scrollbar-track { background: transparent; }

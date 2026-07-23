@@ -7,8 +7,27 @@ const axiosBaseQuery =
   async ({ url, method = 'get', data, params }) => {
     try {
       const res = await http({ url, method, data, params });
-      // Unwrap our { ok, data } envelope.
-      return { data: res.data?.data ?? res.data };
+      const body = res.data;
+      // Our API always responds with a { ok, data } envelope. Anything else
+      // (e.g. an HTML index.html fallback, or a proxy/gateway error page) is
+      // treated as an error so a non-array body can never reach the UI and
+      // crash a `.filter`/`.map` during render.
+      if (body && typeof body === 'object' && 'ok' in body) {
+        if (body.ok) return { data: body.data };
+        return {
+          error: {
+            status: res.status,
+            message: body.error?.message || 'Request failed',
+            details: body.error?.details,
+          },
+        };
+      }
+      return {
+        error: {
+          status: res.status,
+          message: 'Unexpected response from the API. Is the backend reachable?',
+        },
+      };
     } catch (err) {
       const payload = err.response?.data?.error;
       return {

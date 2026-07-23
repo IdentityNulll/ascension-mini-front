@@ -6,8 +6,15 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      // Proxy API calls to the Express server during development.
-      '/api': 'https://ascension-mini-back-production.up.railway.app',
+      // Proxy API calls to the backend during development.
+      // changeOrigin rewrites the Host header, required when proxying to a
+      // remote https host (e.g. Railway). Point target at http://localhost:4000
+      // to use a locally running server instead.
+      '/api': {
+        target: 'https://ascension-mini-back-production.up.railway.app',
+        changeOrigin: true,
+        secure: true,
+      },
     },
   },
 });

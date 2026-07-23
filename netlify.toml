@@ -1,0 +1,104 @@
+# ----------------------------------------------------
+# Global Build & Deployment Settings
+# ----------------------------------------------------
+[build]
+  # Command used to build your project
+  command = "npm run build"
+  
+  # Directory where your built assets are stored
+  publish = "dist/"
+  
+  # Directory containing your serverless Netlify Functions
+  functions = "netlify/functions/"
+
+  # Specify the Node version for your build
+  environment = { NODE_VERSION = "20.x", NPM_VERSION = "10.x" }
+
+  # Uncomment the following line if using a monorepo
+  # base = "apps/frontend/"
+
+
+# ----------------------------------------------------
+# Serverless Functions Configuration
+# ----------------------------------------------------
+[functions]
+  # Default node timeout (maximum is 10 for standard, 900 for pro/enterprise)
+  node_bundler = "esbuild"
+  external_node_modules = ["axios"]
+  included_files = ["assets/**/*.json"]
+
+
+# ----------------------------------------------------
+# Custom HTTP Headers
+# ----------------------------------------------------
+[[headers]]
+  # Apply these headers to all files
+  for = "/*"
+  [headers.values]
+    # Basic Security Headers
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    
+    # Strict Transport Security (HSTS)
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+    
+    # Content Security Policy Example (Uncomment and customize for your needs)
+    # Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://google-analytics.com; style-src 'self' 'unsafe-inline';"
+
+[[headers]]
+  # Apply explicit caching for your static assets
+  for = "/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+
+# ----------------------------------------------------
+# Redirects & Rewrites
+# ----------------------------------------------------
+# Force HTTPS
+[[redirects]]
+  from = "http://*"
+  to = "https://:splat"
+  status = 301
+  force = true
+
+# Single Page App (SPA) Routing (Routes all paths to index.html for client-side routing)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# API Proxy/Rewrite Example (Masks an external API call)
+[[redirects]]
+  from = "/api/*"
+  to = "https://example.com"
+  status = 200
+  force = true
+
+# Role-Based Redirects (Redirect to a login if not authorized)
+[[redirects]]
+  from = "/admin/*"
+  to = "/login"
+  status = 302
+  conditions = { Role = ["admin"] }
+
+
+# ----------------------------------------------------
+# Branch & Context-Specific Overrides
+# ----------------------------------------------------
+# Settings specifically for the Production branch
+[context.production]
+  command = "npm run build"
+  publish = "dist/"
+  
+# Settings specifically for the Staging / Preview branches
+[context.deploy-preview]
+  command = "npm run build:staging"
+  publish = "dist/"
+  environment = { SITE_ENV = "staging" }
+
+# Settings for a specific branch (e.g., "dev")
+[context.branch-name]
+  command = "npm run build:dev"
+  publish = "public/"

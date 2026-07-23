@@ -8,7 +8,7 @@ import axios from 'axios';
 // └──────────────────────────────────────────────────────────────────┘
 // Accept VITE_API_URL with or without a trailing slash OR an existing /api
 // suffix, so we can never accidentally produce `/api/api`.
-const RAW = (import.meta.env.VITE_API_URL || 'https://ascension-mini-back-production.up.railway.app/api').trim();
+const RAW = (import.meta.env.VITE_API_URL || 'https://ascension-mini-back-production.up.railway.app').trim();
 const ORIGIN = RAW.replace(/\/+$/, '').replace(/\/api\/?$/i, '');
 
 /** Full API root, e.g. https://your-backend/api */

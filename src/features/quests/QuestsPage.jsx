@@ -12,7 +12,7 @@ import { PageHeader, StatCard, SearchInput, EmptyState, Spinner } from '../../co
 import Button from '../../components/Button';
 import EditableCell from '../../components/EditableCell';
 import ConfirmDialog from '../../components/ConfirmDialog';
-import { Select } from '../../components/Field';
+import Select from '../../components/Select';
 import QuestModal from './QuestModal';
 import {
   monthDates, entryMap, cellXp, xpToSets, questMonthlyXp, questActiveDays, dailyTotals,
@@ -113,12 +113,12 @@ export default function QuestsPage() {
 
       <div className="flex items-center gap-2 mb-3">
         <SearchInput value={search} onChange={setSearch} placeholder="Search quests…" />
-        <Select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} className="!w-44">
-          <option value="">All categories</option>
-          {categories.map((c) => (
-            <option key={c._id} value={c._id}>{c.name}</option>
-          ))}
-        </Select>
+        <Select
+          value={categoryFilter}
+          onChange={setCategoryFilter}
+          className="w-44"
+          options={[{ value: '', label: 'All categories' }, ...categories.map((c) => ({ value: c._id, label: c.name }))]}
+        />
         <span className="ml-auto text-2xs text-ink-faint">{visibleQuests.length} quest(s)</span>
       </div>
 

@@ -40,20 +40,23 @@
 
   /* --- Inputs --- */
   .input {
-    @apply w-full h-8 rounded-md border border-line bg-white px-2.5 text-sm text-ink
+    @apply w-full h-9 rounded-md border border-line-strong bg-white px-2.5 text-sm text-ink
            placeholder:text-ink-faint outline-none transition
-           focus:border-accent focus:ring-2 focus:ring-accent/20;
+           hover:border-ink-faint
+           focus:border-accent focus:ring-2 focus:ring-accent/25;
   }
-  .label { @apply block text-xs font-medium text-ink-muted mb-1; }
+  .label { @apply block text-xs font-medium text-ink-muted mb-1.5; }
 
   /* --- Data table --- */
   .data-table { @apply w-full border-collapse text-sm; }
   .data-table th {
     @apply bg-surface-raised text-left text-xs font-semibold text-ink-muted
-           px-3 py-2 border-b border-line whitespace-nowrap;
+           px-3 py-2 border-b-2 border-line-strong border-r border-line
+           whitespace-nowrap;
   }
+  .data-table th:last-child { @apply border-r-0; }
   .data-table td {
-    @apply px-3 py-1.5 border-b border-line text-ink align-middle;
+    @apply px-3 py-1.5 border-b border-line-strong text-ink align-middle;
   }
   .data-table tbody tr:hover { @apply bg-surface-subtle; }
 
@@ -72,6 +75,39 @@
     @apply inline-flex items-center gap-1.5 rounded px-1.5 py-0.5 text-2xs font-medium
            border border-line text-ink-muted bg-white;
   }
+}
+
+@layer base {
+  /* Kill native number-input spinners everywhere — we use custom steppers. */
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type='number'] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+}
+
+@layer components {
+  /* Trigger button shared by the custom Select and MonthPicker. */
+  .control {
+    @apply inline-flex items-center justify-between gap-2 h-9 rounded-md border border-line-strong
+           bg-white px-2.5 text-sm text-ink outline-none transition select-none cursor-pointer
+           hover:border-ink-faint focus:border-accent focus:ring-2 focus:ring-accent/25;
+  }
+  .control[data-open='true'] { @apply border-accent ring-2 ring-accent/25; }
+
+  /* Floating popover menu (dropdown lists, month grid). */
+  .menu {
+    @apply absolute z-50 mt-1 rounded-md border border-line-strong bg-white shadow-pop p-1;
+  }
+  .menu-item {
+    @apply flex items-center gap-2 w-full rounded px-2 h-8 text-sm text-ink text-left
+           cursor-pointer transition-colors hover:bg-surface-subtle;
+  }
+  .menu-item[data-active='true'] { @apply bg-accent-soft text-accent font-medium; }
 }
 
 /* Thin, unobtrusive scrollbars for dense tables. */

@@ -9,8 +9,7 @@ import { PageHeader, Spinner } from '../../components/misc';
 import Button from '../../components/Button';
 import ConfirmDialog from '../../components/ConfirmDialog';
 import { Input } from '../../components/Field';
-
-const SWATCHES = ['#2563eb', '#0ea5e9', '#14b8a6', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#64748b'];
+import ColorPicker, { SWATCHES } from '../../components/ColorPicker';
 
 export default function SettingsPage() {
   const { data: categories = [], isLoading } = useGetCategoriesQuery();
@@ -80,17 +79,7 @@ export default function SettingsPage() {
             onKeyDown={(e) => e.key === 'Enter' && add()}
             className="!w-56"
           />
-          <div className="flex items-center gap-1">
-            {SWATCHES.map((s) => (
-              <button
-                key={s}
-                onClick={() => setColor(s)}
-                className={`h-5 w-5 rounded-full border-2 ${color === s ? 'border-ink' : 'border-transparent'}`}
-                style={{ background: s }}
-                aria-label={`Color ${s}`}
-              />
-            ))}
-          </div>
+          <ColorPicker value={color} onChange={setColor} />
           <Button variant="primary" icon={FiPlus} onClick={add} className="ml-auto">Add</Button>
         </div>
 
@@ -109,15 +98,10 @@ export default function SettingsPage() {
             {categories.map((c, i) => (
               <tr key={c._id}>
                 <td>
-                  <label className="inline-flex cursor-pointer" title="Change color">
-                    <span className="h-4 w-4 rounded-full ring-1 ring-line" style={{ background: c.color }} />
-                    <input
-                      type="color"
-                      value={c.color}
-                      onChange={(e) => updateCat({ id: c._id, name: c.name, color: e.target.value })}
-                      className="sr-only"
-                    />
-                  </label>
+                  <ColorPicker
+                    value={c.color}
+                    onChange={(color) => updateCat({ id: c._id, name: c.name, color })}
+                  />
                 </td>
                 <td>
                   <input

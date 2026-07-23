@@ -1,9 +1,11 @@
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import Modal from '../../components/Modal';
 import Button from '../../components/Button';
-import { Field, Input, Select } from '../../components/Field';
+import Select from '../../components/Select';
+import Toggle from '../../components/Toggle';
+import { Field, Input } from '../../components/Field';
 import { useCreateMetricMutation, useUpdateMetricMutation } from '../../app/api';
 
 const TYPES = [
@@ -18,7 +20,7 @@ export default function MetricModal({ open, onClose, metric }) {
   const isEdit = Boolean(metric);
   const [create, { isLoading: creating }] = useCreateMetricMutation();
   const [update, { isLoading: updating }] = useUpdateMetricMutation();
-  const { register, handleSubmit, reset, watch, formState: { errors } } = useForm();
+  const { register, handleSubmit, reset, control, watch, formState: { errors } } = useForm();
   const type = watch('type');
 
   useEffect(() => {
@@ -37,6 +39,7 @@ export default function MetricModal({ open, onClose, metric }) {
   };
 
   const hint = TYPES.find((t) => t.value === type)?.hint;
+  const unitless = type === 'boolean' || type === 'text';
 
   return (
     <Modal
@@ -58,18 +61,23 @@ export default function MetricModal({ open, onClose, metric }) {
         </Field>
         <div className="grid grid-cols-2 gap-3">
           <Field label="Type" hint={hint}>
-            <Select {...register('type', { required: true })}>
-              {TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
-            </Select>
+            <Controller
+              name="type"
+              control={control}
+              render={({ field }) => (
+                <Select value={field.value} onChange={field.onChange} options={TYPES} />
+              )}
+            />
           </Field>
-          <Field label="Unit" hint="Optional (hours, kg, /10, L)">
-            <Input placeholder="hours" disabled={type === 'boolean' || type === 'text'} {...register('unit')} />
+          <Field label="Unit" hint={unitless ? 'Not used for this type' : 'Optional (hours, kg, /10, L)'}>
+            <Input placeholder="hours" disabled={unitless} {...register('unit')} />
           </Field>
         </div>
-        <label className="flex items-center gap-2 text-sm text-ink-muted mt-1">
-          <input type="checkbox" {...register('active')} className="accent-accent" />
-          Active
-        </label>
+        <Controller
+          name="active"
+          control={control}
+          render={({ field }) => <Toggle checked={field.value} onChange={field.onChange} label="Active" />}
+        />
       </form>
     </Modal>
   );

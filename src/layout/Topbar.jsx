@@ -2,7 +2,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FiChevronLeft, FiChevronRight, FiMenu } from 'react-icons/fi';
 import { selectMonth, shiftMonth, setMonth } from '../app/monthSlice';
 import { useGetBalanceQuery } from '../app/api';
-import { xp, monthLabel } from '../lib/format';
+import { xp } from '../lib/format';
+import MonthPicker from '../components/MonthPicker';
 import NotificationsMenu from './NotificationsMenu';
 
 export default function Topbar({ onMenu }) {
@@ -24,17 +25,10 @@ export default function Topbar({ onMenu }) {
         <button className="btn btn-ghost btn-icon" onClick={() => dispatch(shiftMonth(-1))} aria-label="Previous month">
           <FiChevronLeft className="text-[16px]" />
         </button>
-        <input
-          type="month"
-          value={month}
-          onChange={(e) => e.target.value && dispatch(setMonth(e.target.value))}
-          className="input w-[8.5rem] sm:w-40 h-8 tabular"
-          aria-label="Select month"
-        />
+        <MonthPicker value={month} onChange={(m) => dispatch(setMonth(m))} />
         <button className="btn btn-ghost btn-icon" onClick={() => dispatch(shiftMonth(1))} aria-label="Next month">
           <FiChevronRight className="text-[16px]" />
         </button>
-        <span className="ml-2 text-sm font-medium text-ink hidden xl:inline">{monthLabel(month)}</span>
       </div>
 
       {/* Balance + notifications */}

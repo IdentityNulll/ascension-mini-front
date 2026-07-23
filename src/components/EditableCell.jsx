@@ -53,7 +53,7 @@ export default function EditableCell({
 
   if (editing) {
     return (
-      <td className="p-0 border-b border-line">
+      <td className="p-0 border-b border-line-strong">
         <input
           ref={inputRef}
           type={type}
@@ -73,7 +73,7 @@ export default function EditableCell({
     <td
       onClick={start}
       className={[
-        'px-3 py-1.5 border-b border-line tabular cursor-text select-none',
+        'px-3 py-1.5 border-b border-line-strong tabular cursor-text select-none',
         alignClass,
         disabled ? 'cursor-default text-ink-faint' : 'hover:bg-accent-soft',
         highlight && hasValue ? 'text-ink font-medium' : hasValue ? 'text-ink' : 'text-ink-faint',

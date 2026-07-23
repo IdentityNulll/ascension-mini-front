@@ -16,7 +16,10 @@ export default {
           muted: '#6b7280', // secondary text
           faint: '#9ca3af', // tertiary
         },
-        line: '#e5e7eb', // borders
+        line: {
+          DEFAULT: '#dfe2e7', // borders (a touch stronger so they read clearly)
+          strong: '#c2c8d1', // emphasized separators: inputs, table lines, headers
+        },
         surface: {
           DEFAULT: '#ffffff',
           subtle: '#f9fafb', // row hover / zebra

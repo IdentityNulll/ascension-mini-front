@@ -1,8 +1,10 @@
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import Modal from '../../components/Modal';
 import Button from '../../components/Button';
+import NumberInput from '../../components/NumberInput';
+import Toggle from '../../components/Toggle';
 import { Field, Input } from '../../components/Field';
 import { useCreateShopItemMutation, useUpdateShopItemMutation } from '../../app/api';
 
@@ -10,7 +12,7 @@ export default function ShopItemModal({ open, onClose, item }) {
   const isEdit = Boolean(item);
   const [create, { isLoading: creating }] = useCreateShopItemMutation();
   const [update, { isLoading: updating }] = useUpdateShopItemMutation();
-  const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  const { register, handleSubmit, reset, control, formState: { errors } } = useForm();
 
   useEffect(() => {
     if (open) reset({ name: item?.name || '', xpCost: item?.xpCost ?? 60, active: item?.active ?? true });
@@ -47,12 +49,20 @@ export default function ShopItemModal({ open, onClose, item }) {
           <Input placeholder="e.g. Movie Night" {...register('name', { required: 'Name is required' })} />
         </Field>
         <Field label="XP cost" error={errors.xpCost?.message}>
-          <Input type="number" min="0" step="1" {...register('xpCost', { required: 'Required', min: { value: 0, message: '≥ 0' } })} />
+          <Controller
+            name="xpCost"
+            control={control}
+            rules={{ required: 'Required', min: { value: 0, message: '≥ 0' } }}
+            render={({ field }) => (
+              <NumberInput value={field.value} onChange={field.onChange} min={0} step={5} className="w-40" />
+            )}
+          />
         </Field>
-        <label className="flex items-center gap-2 text-sm text-ink-muted mt-1">
-          <input type="checkbox" {...register('active')} className="accent-accent" />
-          Active
-        </label>
+        <Controller
+          name="active"
+          control={control}
+          render={({ field }) => <Toggle checked={field.value} onChange={field.onChange} label="Active" />}
+        />
       </form>
     </Modal>
   );

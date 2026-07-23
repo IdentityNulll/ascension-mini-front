@@ -1,9 +1,12 @@
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import Modal from '../../components/Modal';
 import Button from '../../components/Button';
-import { Field, Input, Select } from '../../components/Field';
+import Select from '../../components/Select';
+import NumberInput from '../../components/NumberInput';
+import Toggle from '../../components/Toggle';
+import { Field, Input } from '../../components/Field';
 import {
   useCreateQuestMutation, useUpdateQuestMutation, useGetCategoriesQuery,
 } from '../../app/api';
@@ -13,7 +16,7 @@ export default function QuestModal({ open, onClose, quest }) {
   const { data: categories = [] } = useGetCategoriesQuery();
   const [createQuest, { isLoading: creating }] = useCreateQuestMutation();
   const [updateQuest, { isLoading: updating }] = useUpdateQuestMutation();
-  const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  const { register, handleSubmit, reset, control, formState: { errors } } = useForm();
 
   useEffect(() => {
     if (open) {
@@ -58,21 +61,42 @@ export default function QuestModal({ open, onClose, quest }) {
         </Field>
         <div className="grid grid-cols-2 gap-3">
           <Field label="Category" error={errors.categoryId?.message}>
-            <Select {...register('categoryId', { required: 'Pick a category' })}>
-              {categories.length === 0 && <option value="">No categories — add one in Settings</option>}
-              {categories.map((c) => (
-                <option key={c._id} value={c._id}>{c.name}</option>
-              ))}
-            </Select>
+            <Controller
+              name="categoryId"
+              control={control}
+              rules={{ required: 'Pick a category' }}
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder={categories.length ? 'Select category' : 'Add one in Settings'}
+                  options={categories.map((c) => ({
+                    value: c._id,
+                    label: c.name,
+                    icon: <span className="h-2.5 w-2.5 rounded-full" style={{ background: c.color }} />,
+                  }))}
+                />
+              )}
+            />
           </Field>
           <Field label="XP per set" error={errors.xpPerSet?.message}>
-            <Input type="number" min="0" step="1" {...register('xpPerSet', { required: 'Required', min: { value: 0, message: '≥ 0' } })} />
+            <Controller
+              name="xpPerSet"
+              control={control}
+              rules={{ required: 'Required', min: { value: 0, message: '≥ 0' } }}
+              render={({ field }) => (
+                <NumberInput value={field.value} onChange={field.onChange} min={0} step={1} />
+              )}
+            />
           </Field>
         </div>
-        <label className="flex items-center gap-2 text-sm text-ink-muted mt-1">
-          <input type="checkbox" {...register('active')} className="accent-accent" />
-          Active
-        </label>
+        <Controller
+          name="active"
+          control={control}
+          render={({ field }) => (
+            <Toggle checked={field.value} onChange={field.onChange} label="Active" />
+          )}
+        />
       </form>
     </Modal>
   );

@@ -98,7 +98,8 @@ export default function JournalPage() {
     const diff = dayjs(selectedDate).diff(dayjs(TODAY()), 'day');
     if (diff === 0) return 'Today';
     if (diff === -1) return 'Yesterday';
-    return dayjs(selectedDate).from(dayjs(TODAY()));
+    if (diff === 1) return 'Tomorrow';
+    return diff < 0 ? `${-diff} days ago` : `in ${diff} days`;
   })();
 
   return (

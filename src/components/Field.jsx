@@ -11,6 +11,10 @@ export function Field({ label, error, children, hint }) {
   );
 }
 
-export const Input = forwardRef(function Input(props, ref) {
-  return <input ref={ref} className="input" {...props} />;
+export const Input = forwardRef(function Input({ className = '', ...props }, ref) {
+  return <input ref={ref} className={`input ${className}`} {...props} />;
+});
+
+export const Textarea = forwardRef(function Textarea({ className = '', rows = 4, ...props }, ref) {
+  return <textarea ref={ref} rows={rows} className={`textarea ${className}`} {...props} />;
 });

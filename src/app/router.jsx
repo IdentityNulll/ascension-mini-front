@@ -6,6 +6,7 @@ import MetricsPage from '../features/metrics/MetricsPage';
 import AnalyticsPage from '../features/analytics/AnalyticsPage';
 import ReportsPage from '../features/reports/ReportsPage';
 import SettingsPage from '../features/settings/SettingsPage';
+import ProfilePage from '../features/profile/ProfilePage';
 
 export const router = createBrowserRouter([
   {
@@ -18,6 +19,7 @@ export const router = createBrowserRouter([
       { path: 'metrics', element: <MetricsPage /> },
       { path: 'analytics', element: <AnalyticsPage /> },
       { path: 'reports', element: <ReportsPage /> },
+      { path: 'profile', element: <ProfilePage /> },
       { path: 'settings', element: <SettingsPage /> },
       { path: '*', element: <Navigate to="/quests" replace /> },
     ],

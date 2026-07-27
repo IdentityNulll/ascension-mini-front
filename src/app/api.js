@@ -45,7 +45,7 @@ export const api = createApi({
   baseQuery: axiosBaseQuery(),
   tagTypes: [
     'Category', 'Quest', 'QuestEntry', 'ShopItem', 'Purchase',
-    'Metric', 'MetricEntry', 'Analytics', 'Balance', 'Reminder', 'Notification',
+    'Metric', 'MetricEntry', 'Analytics', 'Balance', 'Reminder', 'Notification', 'Profile',
   ],
   endpoints: (b) => ({
     // --- Balance ---
@@ -167,6 +167,13 @@ export const api = createApi({
       providesTags: ['Analytics'],
     }),
 
+    // --- Profile (About Me) ---
+    getProfile: b.query({ query: () => ({ url: '/profile' }), providesTags: ['Profile'] }),
+    updateProfile: b.mutation({
+      query: (data) => ({ url: '/profile', method: 'put', data }),
+      invalidatesTags: ['Profile'],
+    }),
+
     // --- Reminders / notifications ---
     getTodayReminder: b.query({ query: () => ({ url: '/reminders/today' }), providesTags: ['Reminder'] }),
     getNotifications: b.query({ query: () => ({ url: '/notifications' }), providesTags: ['Notification'] }),
@@ -192,4 +199,5 @@ export const {
   useGetMetricEntriesQuery, useUpsertMetricEntryMutation,
   useGetXpAnalyticsQuery, useGetSpendingAnalyticsQuery, useGetProductivityAnalyticsQuery,
   useGetTodayReminderQuery, useGetNotificationsQuery, useMarkNotificationReadMutation, useMarkAllNotificationsReadMutation,
+  useGetProfileQuery, useUpdateProfileMutation,
 } = api;

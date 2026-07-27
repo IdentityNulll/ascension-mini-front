@@ -47,6 +47,13 @@
   }
   .label { @apply block text-xs font-medium text-ink-muted mb-1.5; }
 
+  /* --- Textarea (custom, matches .input) --- */
+  .textarea {
+    @apply w-full rounded-md border border-line-strong bg-white px-3 py-2 text-sm text-ink leading-relaxed
+           placeholder:text-ink-faint outline-none transition resize-y min-h-[84px]
+           hover:border-ink-faint focus:border-accent focus:ring-2 focus:ring-accent/25;
+  }
+
   /* --- Data table --- */
   .data-table { @apply w-full border-collapse text-sm; }
   .data-table th {

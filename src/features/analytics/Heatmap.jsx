@@ -10,10 +10,15 @@ function shade(value, max) {
   return `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
 }
 
-/** Month calendar heatmap. cells: [{ date, xp }]. */
-export default function Heatmap({ cells }) {
+/**
+ * Month calendar heatmap. cells: [{ date, value }] (also accepts legacy `xp`).
+ * `label` names the unit in tooltips (e.g. "XP", "words").
+ * `onPick(date)` makes cells clickable.
+ */
+export default function Heatmap({ cells, label = 'XP', onPick }) {
   if (!cells?.length) return null;
-  const max = Math.max(1, ...cells.map((c) => c.xp));
+  const val = (c) => c.value ?? c.xp ?? 0;
+  const max = Math.max(1, ...cells.map(val));
   const firstDow = (dayjs(cells[0].date).day() + 6) % 7; // Monday = 0
   const blanks = Array.from({ length: firstDow });
   const dows = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
@@ -29,13 +34,15 @@ export default function Heatmap({ cells }) {
       <div className="grid grid-cols-7 gap-1">
         {blanks.map((_, i) => <div key={`b${i}`} />)}
         {cells.map((c) => {
-          const strong = c.xp / max > 0.55;
+          const v = val(c);
+          const strong = v / max > 0.55;
           return (
             <div
               key={c.date}
-              className={`aspect-square rounded flex items-center justify-center text-2xs tabular ${c.date === today ? 'ring-2 ring-accent' : ''}`}
-              style={{ background: shade(c.xp, max), color: strong ? '#fff' : '#6b7280' }}
-              title={`${dayjs(c.date).format('MMM D')} — ${c.xp} XP`}
+              onClick={onPick ? () => onPick(c.date) : undefined}
+              className={`aspect-square rounded flex items-center justify-center text-2xs tabular ${onPick ? 'cursor-pointer hover:ring-2 hover:ring-accent/50' : ''} ${c.date === today ? 'ring-2 ring-accent' : ''}`}
+              style={{ background: shade(v, max), color: strong ? '#fff' : '#6b7280' }}
+              title={`${dayjs(c.date).format('MMM D')} — ${v} ${label}`}
             >
               {Number(c.date.slice(-2))}
             </div>

@@ -135,8 +135,8 @@ export default function QuestsPage() {
           <table className="data-table sheet border-separate border-spacing-0">
             <thead>
               <tr>
-                <th className="sticky left-0 z-20 bg-surface-raised min-w-[200px]">Quest</th>
-                <th className="text-right">XP/Set</th>
+                <th className="sticky left-0 z-20 bg-surface-raised w-[190px] min-w-[190px]">Quest</th>
+                <th className="sticky left-[190px] z-20 bg-surface-raised text-right w-[64px] min-w-[64px]">XP/Set</th>
                 {dates.map((d) => (
                   <th
                     key={d}
@@ -158,7 +158,7 @@ export default function QuestsPage() {
                 const active = questActiveDays(q, dates, map);
                 return (
                   <tr key={q._id} className="group">
-                    <td className="sticky left-0 z-10 bg-white group-hover:bg-surface-subtle min-w-[200px]">
+                    <td className="sticky left-0 z-10 bg-white group-hover:bg-surface-subtle w-[190px] min-w-[190px]">
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-ink truncate">{q.name}</span>
                         {cat && (
@@ -170,7 +170,7 @@ export default function QuestsPage() {
                         {!q.active && <span className="badge bg-surface-raised text-ink-faint">inactive</span>}
                       </div>
                     </td>
-                    <td className="text-right tabular text-ink-muted">{q.xpPerSet}</td>
+                    <td className="sticky left-[190px] z-10 bg-white group-hover:bg-surface-subtle text-right tabular text-ink-muted w-[64px] min-w-[64px]">{q.xpPerSet}</td>
                     {dates.map((d) => {
                       const sets = map.get(`${q._id}|${d}`);
                       return (
@@ -201,8 +201,8 @@ export default function QuestsPage() {
             </tbody>
             <tfoot>
               <tr className="bg-surface-raised font-medium">
-                <td className="sticky left-0 z-10 bg-surface-raised text-ink">Daily XP</td>
-                <td />
+                <td className="sticky left-0 z-10 bg-surface-raised text-ink w-[190px] min-w-[190px]">Daily XP</td>
+                <td className="sticky left-[190px] z-10 bg-surface-raised" />
                 {dates.map((d) => (
                   <td key={d} className={`text-center tabular ${d === today ? 'text-accent font-semibold' : 'text-ink-muted'}`}>
                     {totals[d] ? xp(totals[d]) : ''}

@@ -46,7 +46,7 @@ export const api = createApi({
   tagTypes: [
     'Category', 'Quest', 'QuestEntry', 'ShopItem', 'Purchase',
     'Metric', 'MetricEntry', 'Analytics', 'Balance', 'Reminder', 'Notification', 'Profile',
-    'Journal', 'JournalStats',
+    'Journal', 'JournalStats', 'Morning', 'MorningStats',
   ],
   endpoints: (b) => ({
     // --- Balance ---
@@ -190,6 +190,21 @@ export const api = createApi({
       invalidatesTags: ['Journal', 'JournalStats'],
     }),
 
+    // --- Morning routine ---
+    getMorningMonth: b.query({
+      query: (month) => ({ url: '/morning', params: { month } }),
+      providesTags: ['Morning'],
+    }),
+    getMorningDay: b.query({
+      query: (date) => ({ url: `/morning/day/${date}` }),
+      providesTags: ['Morning'],
+    }),
+    getMorningStats: b.query({ query: () => ({ url: '/morning/stats' }), providesTags: ['MorningStats'] }),
+    upsertMorning: b.mutation({
+      query: (data) => ({ url: '/morning', method: 'put', data }),
+      invalidatesTags: ['Morning', 'MorningStats'],
+    }),
+
     // --- Reminders / notifications ---
     getTodayReminder: b.query({ query: () => ({ url: '/reminders/today' }), providesTags: ['Reminder'] }),
     getNotifications: b.query({ query: () => ({ url: '/notifications' }), providesTags: ['Notification'] }),
@@ -217,4 +232,5 @@ export const {
   useGetTodayReminderQuery, useGetNotificationsQuery, useMarkNotificationReadMutation, useMarkAllNotificationsReadMutation,
   useGetProfileQuery, useUpdateProfileMutation,
   useGetJournalMonthQuery, useGetJournalDayQuery, useGetJournalStatsQuery, useUpsertJournalMutation,
+  useGetMorningMonthQuery, useGetMorningDayQuery, useGetMorningStatsQuery, useUpsertMorningMutation,
 } = api;

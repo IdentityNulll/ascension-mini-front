@@ -1,10 +1,11 @@
 import { NavLink } from 'react-router-dom';
 import {
-  FiCheckSquare, FiShoppingBag, FiActivity, FiBookOpen, FiBarChart2, FiFileText, FiSettings, FiUser, FiX,
+  FiCheckSquare, FiSunrise, FiShoppingBag, FiActivity, FiBookOpen, FiBarChart2, FiFileText, FiSettings, FiUser, FiX,
 } from 'react-icons/fi';
 
 const NAV = [
   { to: '/quests', label: 'Quests', icon: FiCheckSquare },
+  { to: '/morning', label: 'Morning', icon: FiSunrise },
   { to: '/shop', label: 'Shop', icon: FiShoppingBag },
   { to: '/metrics', label: 'Metrics', icon: FiActivity },
   { to: '/journal', label: 'Journal', icon: FiBookOpen },

@@ -67,6 +67,11 @@
   }
   .data-table tbody tr:hover { @apply bg-surface-subtle; }
 
+  /* Spreadsheet variant: full vertical grid so every cell is clearly bounded. */
+  .data-table.sheet td { @apply border-r border-line-strong; }
+  .data-table.sheet td:last-child,
+  .data-table.sheet th:last-child { @apply border-r-0; }
+
   /* --- Cards / panels --- */
   .panel {
     @apply bg-white border border-line rounded-md shadow-card;

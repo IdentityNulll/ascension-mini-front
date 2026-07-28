@@ -7,7 +7,7 @@ export default function Modal({ open, onClose, title, children, footer, width = 
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-start justify-center p-4 sm:pt-24"
+          className="fixed inset-0 z-50 flex items-start justify-center p-3 sm:p-4 sm:pt-24 overflow-y-auto"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -15,7 +15,7 @@ export default function Modal({ open, onClose, title, children, footer, width = 
         >
           <div className="absolute inset-0 bg-black/30" onClick={onClose} />
           <motion.div
-            className={`panel relative w-full ${width} shadow-pop`}
+            className={`panel relative w-full ${width} shadow-pop my-auto flex flex-col max-h-[calc(100vh-1.5rem)] sm:max-h-[calc(100vh-8rem)]`}
             initial={{ opacity: 0, y: 8, scale: 0.99 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.99 }}
@@ -23,15 +23,15 @@ export default function Modal({ open, onClose, title, children, footer, width = 
             role="dialog"
             aria-modal="true"
           >
-            <div className="flex items-center justify-between border-b border-line px-4 h-12">
+            <div className="flex items-center justify-between border-b border-line px-4 h-12 shrink-0">
               <h2 className="text-sm font-semibold text-ink">{title}</h2>
               <button className="btn btn-ghost btn-icon" onClick={onClose} aria-label="Close">
                 <FiX className="text-[16px]" />
               </button>
             </div>
-            <div className="px-4 py-4">{children}</div>
+            <div className="px-4 py-4 overflow-y-auto scroll-thin">{children}</div>
             {footer && (
-              <div className="flex items-center justify-end gap-2 border-t border-line px-4 h-14">
+              <div className="flex items-center justify-end gap-2 border-t border-line px-4 h-14 shrink-0">
                 {footer}
               </div>
             )}

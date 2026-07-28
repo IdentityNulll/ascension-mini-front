@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { FiPlus, FiTrash2, FiArrowUp, FiArrowDown, FiInfo } from 'react-icons/fi';
 import {
@@ -96,35 +96,18 @@ export default function SettingsPage() {
           </thead>
           <tbody>
             {categories.map((c, i) => (
-              <tr key={c._id}>
-                <td>
-                  <ColorPicker
-                    value={c.color}
-                    onChange={(color) => updateCat({ id: c._id, name: c.name, color })}
-                  />
-                </td>
-                <td>
-                  <input
-                    defaultValue={c.name}
-                    onBlur={(e) => e.target.value.trim() && e.target.value !== c.name && updateCat({ id: c._id, name: e.target.value.trim(), color: c.color })}
-                    className="bg-transparent outline-none font-medium text-ink focus:bg-accent-soft rounded px-1 -mx-1"
-                  />
-                </td>
-                <td className="text-right tabular text-ink-muted">{questCount[c._id] || 0}</td>
-                <td className="text-right whitespace-nowrap">
-                  <button className="btn btn-ghost btn-icon" onClick={() => move(i, -1)} disabled={i === 0} aria-label="Move up">
-                    <FiArrowUp className="text-[14px]" />
-                  </button>
-                  <button className="btn btn-ghost btn-icon" onClick={() => move(i, 1)} disabled={i === categories.length - 1} aria-label="Move down">
-                    <FiArrowDown className="text-[14px]" />
-                  </button>
-                </td>
-                <td className="text-right">
-                  <button className="btn btn-ghost btn-icon text-danger" onClick={() => setConfirm(c)} aria-label="Delete">
-                    <FiTrash2 className="text-[14px]" />
-                  </button>
-                </td>
-              </tr>
+              <CategoryRow
+                key={c._id}
+                category={c}
+                count={questCount[c._id] || 0}
+                isFirst={i === 0}
+                isLast={i === categories.length - 1}
+                onColor={(color) => updateCat({ id: c._id, name: c.name, color })}
+                onRename={(name) => updateCat({ id: c._id, name, color: c.color })}
+                onMoveUp={() => move(i, -1)}
+                onMoveDown={() => move(i, 1)}
+                onDelete={() => setConfirm(c)}
+              />
             ))}
             {categories.length === 0 && (
               <tr><td colSpan={5} className="text-center text-ink-muted py-6">No categories yet.</td></tr>
@@ -153,5 +136,49 @@ export default function SettingsPage() {
         message={`Delete "${confirm?.name}"? Categories with quests can't be deleted until those quests are moved or removed.`}
       />
     </div>
+  );
+}
+
+/** One category row — controlled name input so the table always matches data. */
+function CategoryRow({ category, count, isFirst, isLast, onColor, onRename, onMoveUp, onMoveDown, onDelete }) {
+  const [name, setName] = useState(category.name);
+  // Keep the input in sync when the underlying data changes (e.g. after reorder).
+  useEffect(() => { setName(category.name); }, [category.name]);
+
+  const commit = () => {
+    const v = name.trim();
+    if (v && v !== category.name) onRename(v);
+    else if (!v) setName(category.name);
+  };
+
+  return (
+    <tr>
+      <td>
+        <ColorPicker value={category.color} onChange={onColor} />
+      </td>
+      <td>
+        <input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          onBlur={commit}
+          onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
+          className="w-full bg-transparent outline-none font-medium text-ink focus:bg-accent-soft rounded px-1 -mx-1"
+        />
+      </td>
+      <td className="text-right tabular text-ink-muted">{count}</td>
+      <td className="text-right whitespace-nowrap">
+        <button className="btn btn-ghost btn-icon" onClick={onMoveUp} disabled={isFirst} aria-label="Move up">
+          <FiArrowUp className="text-[14px]" />
+        </button>
+        <button className="btn btn-ghost btn-icon" onClick={onMoveDown} disabled={isLast} aria-label="Move down">
+          <FiArrowDown className="text-[14px]" />
+        </button>
+      </td>
+      <td className="text-right">
+        <button className="btn btn-ghost btn-icon text-danger" onClick={onDelete} aria-label="Delete">
+          <FiTrash2 className="text-[14px]" />
+        </button>
+      </td>
+    </tr>
   );
 }

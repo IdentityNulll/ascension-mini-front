@@ -4,6 +4,10 @@ import { useEffect, useRef, useState } from 'react';
  * A table cell that turns into an input on click. Enter or blur commits,
  * Escape cancels. Built for speed: click → type → Enter → move on.
  *
+ * The editor is an absolutely-positioned overlay with a comfortable minimum
+ * width, so what you type is always clearly visible even when the column
+ * itself is very narrow (like the day columns) — spreadsheet style.
+ *
  * `value` is the raw stored value; `render` formats it for display.
  */
 export default function EditableCell({
@@ -31,7 +35,7 @@ export default function EditableCell({
 
   const start = () => {
     if (disabled) return;
-    setDraft(value ?? value === 0 ? String(value ?? '') : '');
+    setDraft(value === null || value === undefined ? '' : String(value));
     setEditing(true);
   };
 
@@ -50,10 +54,11 @@ export default function EditableCell({
 
   const alignClass = align === 'right' ? 'text-right' : align === 'center' ? 'text-center' : 'text-left';
   const hasValue = value !== null && value !== undefined && value !== '';
+  const isText = type !== 'number';
 
   if (editing) {
     return (
-      <td className="p-0 border-b border-line-strong">
+      <td className="p-0 border-b border-r border-line-strong relative">
         <input
           ref={inputRef}
           type={type}
@@ -63,7 +68,7 @@ export default function EditableCell({
           onChange={(e) => setDraft(e.target.value)}
           onBlur={commit}
           onKeyDown={onKeyDown}
-          className={`w-full h-8 px-2 bg-accent-soft text-ink outline-none ring-2 ring-accent/40 tabular ${alignClass}`}
+          className={`absolute top-0 left-0 z-30 h-full w-full ${isText ? 'min-w-[12rem]' : 'min-w-[3.75rem]'} px-2 bg-white text-ink font-medium outline-none ring-2 ring-accent rounded-sm shadow-pop tabular ${alignClass}`}
         />
       </td>
     );
@@ -73,7 +78,7 @@ export default function EditableCell({
     <td
       onClick={start}
       className={[
-        'px-3 py-1.5 border-b border-line-strong tabular cursor-text select-none',
+        'px-2.5 py-1.5 border-b border-r border-line-strong tabular cursor-text select-none',
         alignClass,
         disabled ? 'cursor-default text-ink-faint' : 'hover:bg-accent-soft',
         highlight && hasValue ? 'text-ink font-medium' : hasValue ? 'text-ink' : 'text-ink-faint',

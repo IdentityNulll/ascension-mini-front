@@ -20,7 +20,7 @@ export default function MetricCell({ metric, value, onCommit, isToday }) {
     return (
       <td
         onClick={cycle}
-        className={`px-3 py-1.5 border-b border-line-strong text-center cursor-pointer hover:bg-accent-soft ${isToday ? 'bg-accent-soft/40' : ''}`}
+        className={`px-3 py-1.5 border-b border-r border-line-strong text-center cursor-pointer hover:bg-accent-soft ${isToday ? 'bg-accent-soft/40' : ''}`}
         title="Click to toggle"
       >
         <span className="inline-flex items-center justify-center">{icon}</span>

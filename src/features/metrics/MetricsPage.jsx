@@ -85,7 +85,7 @@ export default function MetricsPage() {
         </div>
       ) : (
         <div className="panel overflow-x-auto scroll-thin">
-          <table className="data-table border-separate border-spacing-0">
+          <table className="data-table sheet border-separate border-spacing-0">
             <thead>
               <tr>
                 <th className="sticky left-0 z-20 bg-surface-raised min-w-[180px]">Metric</th>
